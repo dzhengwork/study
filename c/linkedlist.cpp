@@ -36,6 +36,32 @@ Node* reverse(Node* head)
 	return newHead;
 }
 
+Node* reverseBetween(Node* head, int m, int n)
+{
+    if (head == NULL) return head;
+    if (m >= n) return head;
+    n -= m;
+
+    Node prehead;
+    prehead.next = head;
+    
+    // find m-1 and m
+    Node* headm1 = &prehead;
+    while(--m) {
+        headm1 = headm1->next;
+    }
+    Node* headm = headm1->next;
+
+    while(n>0) {
+        Node* tmp = headm->next;
+        headm->next = tmp->next;
+        tmp->next = headm1->next;
+        headm1->next = tmp;
+        n--;
+    }
+    return prehead.next;
+}
+
 Node* remove(Node* head, int data)
 {
 	if (head == NULL) return head;
@@ -62,11 +88,17 @@ int main()
 	printList(head);
 
 	head = reverse(head);
-
 	printList(head);
 
 	head = remove(head, 3);
-
 	printList(head);
+
+	head = reverseBetween(head, 1, 6);
+	printList(head);
+	head = reverseBetween(head, 1, 2);
+	printList(head);
+	head = reverseBetween(head, 2, 4);
+	printList(head);
+
 	return 0;
 }
