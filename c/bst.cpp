@@ -15,6 +15,23 @@ struct BstNode
     BstNode(int data) : val(data), left(NULL), right(NULL) {};
 };
 
+BstNode* firstLarger(BstNode* root, int data)
+{
+    if (root == NULL) return NULL;
+    
+    if (root->val > data) {
+        BstNode* l = firstLarger(root->left, data);
+        if (l) {
+            return l;
+        }
+        return root;
+    }
+    else if (root->val < data) {
+        return firstLarger(root->right, data);
+    }
+    return root;
+}
+
 BstNode* Insert(BstNode* root, int data)
 {
 	if (root == NULL) {
@@ -231,5 +248,16 @@ int main()
 	else {
 		cout << "not found" << endl;
 	}
+
+	cout << "enter number to search: ";
+	cin >> num;
+    BstNode* f = firstLarger(root, num);
+    if (f) {
+		cout << "found: " << f->val << endl;
+	}
+	else {
+		cout << "not found" << endl;
+	}
+
 	return 0;
 }

@@ -26,14 +26,27 @@ void printList(Node* head)
 
 Node* reverse(Node* head)
 {
-	Node* newHead = NULL;
-	while(head) {
-		Node* next = head->next;
-		head->next = newHead;
-		newHead = head;
-		head = next;
+	Node* p = NULL;
+	Node* c = head;
+    Node* n = NULL;
+	while(c) {
+		n = c->next;
+		c->next = p;
+		p = c;
+		c = n;
 	}
-	return newHead;
+	return p;
+/*
+    Node* n = c->next;
+    while(c) {
+        c->next = p;
+        p = c;
+        c = n;
+        n = n->next;
+        if (n==0) break;
+    }
+    return c;
+*/
 }
 
 Node* reverseBetween(Node* head, int m, int n)
@@ -46,17 +59,17 @@ Node* reverseBetween(Node* head, int m, int n)
     prehead.next = head;
     
     // find m-1 and m
-    Node* headm1 = &prehead;
+    Node* p = &prehead;
     while(--m) {
-        headm1 = headm1->next;
+        p = p->next;
     }
-    Node* headm = headm1->next;
+    Node* headm = p->next;
 
     while(n>0) {
-        Node* tmp = headm->next;
-        headm->next = tmp->next;
-        tmp->next = headm1->next;
-        headm1->next = tmp;
+        Node* next = headm->next;
+        headm->next = next->next;
+        next->next = p->next;
+        p->next = next;
         n--;
     }
     return prehead.next;
@@ -64,6 +77,7 @@ Node* reverseBetween(Node* head, int m, int n)
 
 Node* remove(Node* head, int data)
 {
+/*
 	if (head == NULL) return head;
 	if (head->data == data) {
 		Node* tmp = head;
@@ -71,6 +85,26 @@ Node* remove(Node* head, int data)
 		delete tmp;
 	}
 	head->next = remove(head->next, data);
+*/
+    Node* p = NULL;    
+    Node* c = head;
+    Node* n = NULL;
+    while(c) {
+        n = c->next;
+        if(c->data == data) {
+            if (p == NULL) {
+                head = n;
+            }
+            else {
+                p->next = n;
+            }
+            delete c;
+        }
+        else {
+            p = c;
+        }
+        c = n;
+    }
 	return head;
 }
 
@@ -84,20 +118,21 @@ int main()
 	head->next->next->next->next->next = newNode(3);
 	head->next->next->next->next->next->next = newNode(7);
 	head->next->next->next->next->next->next->next = newNode(8);
+	head->next->next->next->next->next->next->next->next = newNode(8);
 	
 	printList(head);
 
 	head = reverse(head);
 	printList(head);
 
-	head = remove(head, 3);
+	head = remove(head, 2);
 	printList(head);
 
-	head = reverseBetween(head, 1, 6);
-	printList(head);
 	head = reverseBetween(head, 1, 2);
 	printList(head);
 	head = reverseBetween(head, 2, 4);
+	printList(head);
+	head = reverseBetween(head, 1, 6);
 	printList(head);
 
 	return 0;
